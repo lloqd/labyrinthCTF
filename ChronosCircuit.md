@@ -142,3 +142,5 @@ print (flag)
 ## References:
 - [https://github.com/avrdudes/avr-libc](https://github.com/avrdudes/avr-libc)
 - [https://github.com/suculent/thinx-aes-lib](https://github.com/suculent/thinx-aes-lib)
+- [https://www.pycryptodome.org/src/cipher/aes](https://www.pycryptodome.org/src/cipher/aes)
+- [Understanding I2C by Rohde & Schwarz (on YouTube)](https://www.youtube.com/watch?v=CAvawEcxoPU)
