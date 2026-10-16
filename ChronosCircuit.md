@@ -6,7 +6,7 @@ Flag format: `labyrinth{secret}`
 ## Solution:
 Checking the handout from the challenge, we see `capture.sal` and `challenge.ino`. From the file extensions it's obvious that the first is a logic analyzer capture file - which we will open with Saleae Logic Analyzer - and the second is an Arduino sketch file.
 
-Going through the [`.ino`](files/challenge.ino), we find the overall flow of the program to be as such:
+Going through the [`.ino`](files/cc/challenge.ino), we find the overall flow of the program to be as such:
 
   - An I2C connection is initialized with `Wire.begin()`
   - The following function is called:
@@ -20,7 +20,7 @@ Going through the [`.ino`](files/challenge.ino), we find the overall flow of the
     ```
     Here, we see that a key is being generated for AES encryption (of some string "secret" given in the `setup()` function) using `rand()`, and the seed being the current time, as dictated by the *avr-libc* library (the one in use on Arduinos).
   
-    Going through [`time.h`](files/time.h) from *avr-libc*:
+    Going through [`time.h`](files/cc/time.h) from *avr-libc*:
     ```c
       Section 7.23.2.4 time()
       The standard specifies that time() should return (time_t) -1, if the time is not available.
@@ -108,11 +108,11 @@ Going through the [`.ino`](files/challenge.ino), we find the overall flow of the
 
 Finally, after analysis of the `.ino` file, we can move on to extracting the I2C data from the `.sal` file.
 
-Opening in Saleae Logic Analyzer 2, we see: ![](files/logic.png)
+Opening in Saleae Logic Analyzer 2, we see: ![](files/cc/logic.png)
 
-Zooming in on one transmission: ![](files/zoomlog.png)
+Zooming in on one transmission: ![](files/cc/zoomlog.png)
 
-It is quite obvious that *Channel 1* is the SCL line and *Channel 2* is SDA, and using Logic Analyzer's inbuilt Analyzer we export it to a [.csv](files/exportlogic.csv), where, from previous analysis, we know the third data byte of every transmission (after removing the first two transmissions) will give us the required ciphertext, which is: `4b0d83daa4c29be7882623c3beb0ae5feb3ddfdc71bc4bf6ced1c416547a9419`.
+It is quite obvious that *Channel 1* is the SCL line and *Channel 2* is SDA, and using Logic Analyzer's inbuilt Analyzer we export it to a [.csv](files/cc/exportlogic.csv), where, from previous analysis, we know the third data byte of every transmission (after removing the first two transmissions) will give us the required ciphertext, which is: `4b0d83daa4c29be7882623c3beb0ae5feb3ddfdc71bc4bf6ced1c416547a9419`.
 
 Simply performing **AES-128-CBC** decryption on this should suffice to give us the flag; solve script:
 ```python
